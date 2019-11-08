@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Main {
+public class Factovisors {
 
     static final int MAX_PRIME = 50000;
     static int[] primes = new int[5500];
