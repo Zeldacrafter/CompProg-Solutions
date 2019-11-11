@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Main {
+public class Polygon {
 
     static final double EPS = 1e-9;
 
