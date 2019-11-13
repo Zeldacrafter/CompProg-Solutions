@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 import static java.lang.Math.abs;
 
-public class Main {
+public class TreesOnIsland {
 
     static long gcd(long a, long b) { return b == 0 ? a : gcd(b, a % b); }
 
@@ -45,6 +45,7 @@ public class Main {
             for(int i = 0; i < pts.length; i++)
                 pts[i] = new Pt(s.nextLong(), s.nextLong());
 
+            System.out.println(onEdge(pts));
             long res = (long)(area(pts)/2.0 - onEdge(pts)/2.0 + 1);
             System.out.println(res);
         }
