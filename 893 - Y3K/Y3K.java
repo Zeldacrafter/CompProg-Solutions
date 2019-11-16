@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class Main {
+public class Y3K {
 
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
