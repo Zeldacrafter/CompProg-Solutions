@@ -4,7 +4,7 @@ import java.util.Scanner;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class Main {
+public class TowerOfBabylon {
 
     static class Pt {
         long x, y, z;
