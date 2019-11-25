@@ -43,10 +43,8 @@ public class TowerOfBabylon {
                 Pt bottom = towers[i];
                 for (int j = 0; j < towerC; j++) {
                     Pt top = towers[j];
-                    if( (bottom.x > top.x && bottom.y > top.y) || (bottom.x > top.y && bottom.y > top.x)) {
-                        //System.out.println("Added edge from " + bottom.x + ", " + bottom.y + " to " + top.x + ", " + top.y + "!");
+                    if( (bottom.x > top.x && bottom.y > top.y) || (bottom.x > top.y && bottom.y > top.x) )
                         adj[i][j] = top.z;
-                    }
                 }
             }
 
