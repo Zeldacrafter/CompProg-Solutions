@@ -12,5 +12,6 @@ typedef vector<vii> vvii;
 #define FORI(a, b) for (auto(a) = (b).begin(); (a) != (b).end(); ++(a))
 
 int main() {
-    ?
+    
+    return 0;
 }
