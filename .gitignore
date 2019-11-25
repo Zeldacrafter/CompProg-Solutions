@@ -2,3 +2,6 @@ out/
 *.out
 .idea/
 *~
+input
+myOut
+output
