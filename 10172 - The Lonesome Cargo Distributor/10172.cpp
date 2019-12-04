@@ -11,26 +11,8 @@ typedef vector<vii> vvii;
 #define FOR(a, b, c) for (auto(a) = (b); (a) < (c); ++(a))
 #define FORI(a, b) for (auto(a) = (b).begin(); (a) != (b).end(); ++(a))
 
-class myqueue : public queue<int> {
-    public:
-    void clear() { c.clear(); }
-};
-class mystack : public stack<int> {
-    public:
-    void clear() { c.clear(); }
-};
-
-myqueue queues[110];
-mystack carried;
-
-void debugOutput(int queueAmount, int currStation, int time) {
-    printf("Finished station %d after %d min\n", currStation, time);
-    printf("Stack: %ld\n", carried.size());
-    FOR(i, 0, queueAmount) {
-        printf("Queue %d: %ld\n", i, queues[i].size());
-    }
-    printf("\n");
-}
+queue<int> queues[110];
+stack<int> carried;
 
 bool done(int queueAmount) {
     if(!carried.empty()) return false;
@@ -47,12 +29,12 @@ int main() {
 
     while(tc--) {
 
+        // No need to re-initilize the queues because they are empty after every iteration finishes.
+
         int stations;
         int cargoCapacity;
         int queueCapacity;
         scanf("%d %d %d", &stations, &cargoCapacity, &queueCapacity);
-
-        FOR(i, 0, stations) queues[i].clear();
 
         FOR(i, 0, stations) {
             int nrQueued;
@@ -66,7 +48,6 @@ int main() {
 
         int time = 0;
         int pos = 0;
-        carried.clear();
     
         while(true) {
 
@@ -87,8 +68,6 @@ int main() {
                 queues[pos].pop();
                 time++;
             }
-
-            //debugOutput(stations, pos, time);
 
             if(done(stations)) break;
 
