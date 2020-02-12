@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef pair<int, int> ii;
+typedef vector<int> vi;
+typedef vector<ii> vii;
+typedef vector<vi> vvi;
+typedef vector<vii> vvii;
+#define fi first
+#define se second
+#define ALL(x) (x).begin(), (x).end()
+#define RALL(x) (x).rbegin(), (x).rend()
+#define pf push_front
+#define eb emplace_back
+#define pb push_back
+#define mp make_pair
+#define mt make_tuple
+#define SZ(x) (x).size()
+#define ft front
+#define bk back
+#define ins insert
+#define FOR(a, b, c) for (auto(a) = (b); (a) < (c); ++(a))
+#define ROF(a, b, c) for (auto(a) = (b); (a) > (c); --(a))
+#define F0R(a, b) for (auto(a) = 0; (a) < (b); ++(a))
+#define R0F(a, b) for (auto(a) = (b); (a) >= 0; --(a))
+#define FORI(a, b) for (auto(a) = (b).begin(); (a) != (b).end(); ++(a))
+#define ROFI(a, b) for (auto(a) = (b).rbegin(); (a) != (b).rend(); ++(a))
+#define TRAV(a, b) for (auto&(a) : (b))
+#define CEIL(a, b) ((a) + (b) - 1) / (b)
+#define endl '\n'
+const int xd[4] = {0, 1, 0, -1}, yd[4] = {1, 0, -1, 0};
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int tc;
+    cin >> tc;
+    while(tc--) {
+        ll x, y, n;
+        cin >> x >> y >> n;
+
+        ll res = 1;
+        x %= n;
+        while(y > 0) {
+            if(y & 1)
+                res = res*x % n;
+            x = x*x % n;
+            y >>= 1;
+        }
+        cout << res << endl;
+    }
+
+    return 0;
+}
+
