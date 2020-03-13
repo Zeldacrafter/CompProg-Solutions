@@ -25,52 +25,50 @@ const int xd[4] = {0, 1, 0, -1}, yd[4] = {1, 0, -1, 0};
 template <typename t> bool ckmin(t& a, const t& b) { return a > b ? a = b, true : false; }
 template <typename t> bool ckmax(t& a, const t& b) { return a < b ? a = b, true : false; }
 
-
 int main() {
-    
 
     bitset<100010> poss[100];
     while(true) {
         int n;
         int x;
         scanf("%d %d", &n, &x);
-    
+
         if(!n && !x) break;
-	
-	F0R(i, n) 
-		poss[i].reset(); 
+            
+        F0R(i, n) 
+            poss[i].reset(); 
 
-	vi vals(n, -1);
+        vi vals(n, -1);
         F0R(i, n) {
-		int a, b;
-		scanf("%d.%d", &a, &b);
-		vals[i] = a * 100 + b;
-	}
-	
-	x--;
-	poss[x][vals[x]] = true;
+            int a, b;
+            scanf("%d.%d", &a, &b);
+            vals[i] = a * 100 + b;
+        }
 
-	int res = 10000;
-	FOR(i, vals[x], 10000) {
-		if(!poss[x][i])
-			continue;
-		
-		if(i > 5000) {
-			res = i;
-			break;
-		}
+        x--;
+        poss[x][vals[x]] = true;
 
-		F0R(j, n){
-			if(poss[j][i])
-				continue;
-			int newPoss = i + vals[j];
-			F0R(k, n) 
-				poss[k][newPoss] = poss[k][i];
-			poss[j][newPoss] = true;
-		}
-	}
-	cout << fixed << setprecision(2) << 100.00*vals[x]/res << endl;
+        int res = 10000;
+        FOR(i, vals[x], 10000) {
+            if(!poss[x][i])
+                continue;
+
+            if(i > 5000) {
+                res = i;
+                break;
+            }
+
+            F0R(j, n){
+                if(poss[j][i])
+                    continue;
+                int newPoss = i + vals[j];
+                F0R(k, n) 
+                    poss[k][newPoss] = poss[k][i];
+                poss[j][newPoss] = true;
+            }
+        }
+        cout << fixed << setprecision(2) << 100.00*vals[x]/res << endl;
     }
 
     return 0;
-}
+}	

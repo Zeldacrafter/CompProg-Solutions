@@ -32,10 +32,6 @@ const int xd[4] = {0, 1, 0, -1}, yd[4] = {1, 0, -1, 0};
 template <typename t> bool ckmin(t& a, const t& b) { return a > b ? a = b, true : false; }
 template <typename t> bool ckmax(t& a, const t& b) { return a < b ? a = b, true : false; }
 
-int gaus(int n) {
-    return n*(n+1)/2;
-}
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
@@ -49,20 +45,14 @@ int main() {
         if(cin.eof()) break;
         cin >> thiefDx >> thiefDy;
 
-        if(!thiefX) {
-            cout << 0 << endl;
-            continue;
-        }
-
-        for(int i = 1;; ++i) {
-            int dist = gaus(i);
+        int i = 0;
+        int dist = 0;
+        for(;dist < thiefX || dist < thiefY; ++i) {
+            dist += i + 1;
             thiefX += thiefDx;
             thiefY += thiefDy;
-            if(dist >= thiefX && dist >= thiefY) {
-                cout << i << endl;
-                break;
-            }
         }
+        cout << i << endl;
     }
 
     return 0;

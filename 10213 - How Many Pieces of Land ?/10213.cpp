@@ -29,12 +29,23 @@ template <typename t> bool ckmax(t &a, const t &b) {
   return a < b ? a = b, true : false;
 }
 
-void print_it(unsigned __int128 n) {
-  if (!n) return;
-
-  print_it(n / 10);
-  putchar(n % 10 + '0');
+void prnt(unsigned __int128 n) {
+    if(n < 0) {
+        cout << '-';
+        n *= -1;
+    }
+    long long mod = 1000000000000000000;
+    string str;
+    do {
+        unsigned long long digits = n % mod;
+        string digitStr = to_string(digits);
+        string leading0s = (digits != n) ? string(18 - digitStr.length(), '0') : "";
+        str = leading0s + digitStr + str;
+        n = (n - digits) / mod;
+    } while (n);
+    cout << str; 
 }
+
 
 int main() {
   ios_base::sync_with_stdio(false);
@@ -48,8 +59,8 @@ int main() {
     cin >> n;
 
     unsigned __int128 res = (unsigned __int128)n * (n - 1) * (n - 2) * (n - 3) / 24 + n * (n - 1) / 2 + 1;
-    print_it(res);
-    putchar('\n');
+    prnt(res);
+    cout << endl;
   }
 
   return 0;
