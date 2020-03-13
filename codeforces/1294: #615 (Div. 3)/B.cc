@@ -49,7 +49,7 @@ int main() {
 
 	int tc;
 	cin >> tc;
-	while(tc--) {
-	}
+	while(tc--)
+        solve();
 
 }
