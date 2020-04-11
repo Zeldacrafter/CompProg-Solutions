@@ -28,6 +28,11 @@ typedef vector<vii> vvii;
 #define CLR(a, b) memset((a), (b), sizeof((a)))
 template <typename t> bool ckmin(t& a, const t& b) {return a > b ? a = b, true : false;}
 template <typename t> bool ckmax(t& a, const t& b) {return a < b ? a = b, true : false;}
+#ifndef DEBUG
+#define DEBUG 0
+#endif
+#define dout \
+if (DEBUG) std::cerr
 
 void solve() {
 
