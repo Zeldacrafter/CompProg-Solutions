@@ -3,35 +3,39 @@ using namespace std;
 
 #define endl '\n'
 #define FOR(a, b, c) for (auto(a) = (b); (a) < (c); ++(a))
+#define ROF(a, b, c) for (auto(a) = (b); (a) > (c); --(a))
+#define F0R(a, b) FOR(a, 0, b)
 
 void solve() {
     int n;
     cin >> n;
 
-    cout << 1 << ' ' << 1 << endl;
-    n--;
-
-    int r = 1, k = 1;
-    while(n) {
-        if(k == 1) {
-            if(r > 1 && r <= n)
-                r++, k++;
-            else
-                r++;
-        } else {
-            if(r <= n) 
-                r++;
-            else 
-                k--;
-        }
-
-        if(k == 1)
-            n--;
-        else
-            n -= r - 1;
-
-        cout << r << ' ' << k << endl;
+    if(n < 31) {
+        FOR(i, 1, n + 1)
+            cout << i << ' ' << 1 << endl;
+        return;
     }
+
+    int goal = n - 31;
+    int zeroBits = 0;
+    bool onLeft = true;
+    for(int i = 0; i < 31; ++i) {
+        if(goal & (1 << i)) {
+            if(onLeft)
+                FOR(j, 1, i + 2)
+                    cout << i + 1 << ' ' << j << endl;
+            else
+                ROF(j, i + 1, 0)
+                    cout << i + 1 << ' ' << j << endl;
+            onLeft = !onLeft;
+        } else {
+            zeroBits++;
+            cout << i + 1 << ' ' << (onLeft ? 1 : i + 1) << endl;
+        }
+    }
+
+    F0R(i, 31 - zeroBits)
+        cout << 32 + i << ' ' << (onLeft ? 1 : 32 + i) << endl;
 }
 
 int main() {
