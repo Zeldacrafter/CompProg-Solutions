@@ -38,34 +38,23 @@ class unionFind {
  public:
   unionFind(int size)
       : _size(size), data(size, -1) {}
-  int find(int toFind) {
-    int root = toFind;
-    while (data[root] >= 0)
-      root = data[root];
-    while (toFind != root) {
-      int tmp = data[toFind];
-      data[toFind] = root;
-      toFind = tmp;
-    }
-    return root;
-  }
-  void join(int a, int b) {
-    if (data[a] < data[b]) {
-      data[a] += data[b];
-      data[b] = a;
-    } else {
-      data[b] += data[a];
-      data[a] = b;
-    }
-    _size--;
+  bool sameSet(int a, int b) { return find(a) == find(b); }
+  int find(int x) { return data[x] < 0 ? x : data[x] = find(data[x]); }
+  bool join(int a, int b) {
+    a = find(a), b = find(b);
+    if (a == b) return false;
+    if (data[a] > data[b]) swap(a, b);
+    data[a] += data[b], data[b] = a;
+    return true;
   }
   int size() { return _size; }
-  int size(int a) { return -data[a]; }
+  int size(int a) { return -data[find(a)]; }
 
  private:
-  vi data;
   int _size;
-}; 
+  vi data;
+};
+
 
 void solve() {
     int F, cnt = 0;
@@ -83,10 +72,8 @@ void solve() {
         if(!ind.count(b))
             ind[b] = cnt++;
 
-        if(uf.find(ind[a]) != uf.find(ind[b]))
-            uf.join(uf.find(ind[a]), uf.find(ind[b]));
-
-        cout << uf.size(uf.find(ind[a])) << endl;
+        uf.join(ind[a], ind[b]);
+        cout << uf.size(ind[a]) << endl;
     }
 }
 
