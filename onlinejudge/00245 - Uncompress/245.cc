@@ -39,7 +39,7 @@ int main() {
     string inp;
     while(1) {
         char c = getchar();
-        if(c == '0' && (!SZ(inp) || !(inp[SZ(inp) - 1] >= '0' && inp[SZ(inp) - 1] <= '9')))
+        if(c == '0' && (!SZ(inp) || !isdigit(inp[SZ(inp) - 1])))
             break;
         inp += c;
     }
@@ -48,7 +48,7 @@ int main() {
     vector<string> text;
     string res, s;
     for(int i = 0; i < n; ) {
-        while(i < n && ((inp[i] >= 'a' && inp[i] <= 'z') || (inp[i] >= 'A' && inp[i] <= 'Z')))
+        while(i < n && isalpha(inp[i]))
             s.pb(inp[i++]);
         if(SZ(s)) {
             text.pb(s);
@@ -56,7 +56,7 @@ int main() {
             s.clear();
         }
 
-        while(i < n && (inp[i] >= '0' && inp[i] <= '9'))
+        while(i < n && isdigit(inp[i]))
             s.pb(inp[i++]);
         if(SZ(s)) {
             int offset = stoi(s);
@@ -68,10 +68,8 @@ int main() {
             res += next;
             s.clear();
         }
-        
-        while(i < n && !(inp[i] >= '0' && inp[i] <= '9') 
-                    && !(inp[i] >= 'a' && inp[i] <= 'z') 
-                    && !(inp[i] >= 'A' && inp[i] <= 'Z'))
+
+        while(i < n && !isalpha(inp[i]) && !isdigit(inp[i]))
             res += inp[i++];
     }
     cout << res;
