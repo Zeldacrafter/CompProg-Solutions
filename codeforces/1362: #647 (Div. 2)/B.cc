@@ -1,0 +1,128 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> ii;
+typedef vector<int> vi;
+typedef vector<ii> vii;
+typedef vector<vi> vvi;
+typedef vector<vii> vvii;
+#define fi first
+#define se second
+#define ALL(x) (x).begin(), (x).end()
+#define RALL(x) (x).rbegin(), (x).rend()
+#define pb push_back
+#define eb emplace_back
+#define mp make_pair
+#define SZ(x) (int)(x).size()
+#define endl '\n'
+#define FOR(a, b, c) for (auto(a) = (b); (a) < (c); ++(a))
+#define F0R(a, b) FOR ((a), 0, (b))
+#define ROF(a, b, c) for (auto(a) = (b); (a) > (c); --(a))
+#define R0F(a, b) ROF ((a), (b), -1)
+#define CEIL(a, b) ((a) + (b)-1) / (b)
+#define SET(a, b) memset((a), (b), sizeof(a))
+template <class t> bool ckmin(t& a, const t& b) { return a > b ? a = b, true : false; }
+template <class t> bool ckmax(t& a, const t& b) { return a < b ? a = b, true : false; }
+
+#ifndef DEBUG
+#define DEBUG 0
+#endif
+#define dout \
+  if (DEBUG) std::cerr
+#define dvar(...) " [" << #__VA_ARGS__ ": " << (__VA_ARGS__) << "] "
+template <class a, class b>
+ostream& operator<<(ostream& o, const pair<a, b>& p);
+template <class T> struct IsC {
+  template <class C> static char test(typename C::const_iterator*);
+  template <class C> static int test(...);
+  static const bool value = sizeof(test<T>(0)) == sizeof(char);
+};
+template <> struct IsC<string> { static const bool value = false; };
+template <class C> typename enable_if<IsC<C>::value, ostream&>::type operator<<( ostream& o, const C& c) {
+  o << '{';
+  for (auto it = c.begin(); it != c.end();)
+    o << *it << (++it != c.end() ? ", " : "}");
+  return o;
+}
+template <class a, class b> ostream& operator<<(ostream& o, const pair<a, b>& p) {
+  return o << '(' << p.fi << ", " << p.se << ')';
+}
+
+bitset<1030> seen;
+int amt[20];
+
+void solve() {
+    seen.reset();
+    SET(amt, 0);
+
+    int n;
+    cin >> n;
+    
+    vi a(n);
+    F0R(i, n) {
+        cin >> a[i];
+        seen[a[i]] = true;
+        int k = a[i];
+        int cnt = 0;
+        while(k) {
+            if(k & 1)
+                amt[cnt]++;
+            k >>= 1;
+            cnt++;
+        }
+    }
+
+    if(n & 1) {
+        cout << -1 << endl;
+        return;
+    }
+
+    vi ok;
+    F0R(i, 20)
+        if(amt[i] == n/2)
+            ok.pb(i);
+
+    dout << dvar(ok) << endl;
+    for(int i = 1; i < (1 << SZ(ok)); ++i) {
+        dout << dvar(i) << endl;
+        bool found = true;
+
+        for(int k : a) {
+            dout << dvar(k);
+            F0R(j, SZ(ok)) {
+                dout << dvar(i & (1 << j));
+                if(i & (1 << j)) {
+                    k ^= (1 << ok[j]);
+                }
+            }
+            dout << dvar(k) << endl;
+
+            if(!seen[k]) {
+                found = false;
+                break;
+            }
+        }
+
+        if(found) {
+            int res = 0;
+            F0R(j, SZ(ok))
+                if(i & (1 << j))
+                    res += 1 << ok[j];
+            cout << res << endl;
+            return;
+        }
+    }
+    cout << -1 << endl;
+}
+
+int main() {
+    cin.tie(0);
+    ios_base::sync_with_stdio(0);
+
+    int tc;
+    cin >> tc;
+    while(tc--)
+        solve();
+}
+
