@@ -67,13 +67,11 @@ int main() {
     vi last(cnt + 1, -1);
     int start = 0, res = 0;
     F0R(i, n) {
-        dout << dvar(i) << dvar(start) << endl;
         if(last[m[a[i]]] != -1)
             ckmax(start, last[m[a[i]]] + 1);
         last[m[a[i]]] = i;
         ckmax(res, i - start + 1);
     }
-    dout << dvar(n) << dvar(start) << endl;
     ckmax(res, n - start);
 
     cout << res;
