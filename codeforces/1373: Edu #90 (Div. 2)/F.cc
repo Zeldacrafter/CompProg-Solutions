@@ -59,6 +59,7 @@ void solve() {
     F0R(i, n) cin >> cap[i];
 
     int need = 0;
+    int firstRound = 0;
     F0R(_, 2) {
         F0R(i, n) {
             if(need > cap[i]) {
@@ -68,9 +69,11 @@ void solve() {
             int left = cap[i] - need;
             need = max(city[(i + 1) % n] - left, 0);
         }
+
+        if(!_) firstRound = need;
     }
 
-    cout << "YES\n";
+    cout << (firstRound < need ? "NO" : "YES") << endl;
 }
 
 int main() {
