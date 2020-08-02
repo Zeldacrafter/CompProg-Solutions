@@ -90,7 +90,67 @@ void tprint(vector<vector<T>>& v, size_t width = 0, ostream& o = cerr) {
   }
 }
 
+const string GOAL = "abacaba";
+int n;
+
+bool correct(string& s) {
+    int i = 0;
+    int cnt = 0;
+    for(; i < SZ(s); ++i) {
+        bool ok = true;
+        F0R(j, SZ(GOAL))
+            if(GOAL[j] != s[i + j]) {
+                ok = false;
+                break;
+            }
+        cnt += ok;
+    }
+
+    return cnt == 1;
+}
+
+pair<bool, string> poss(string s) {
+    if(correct(s))
+        return mp(true, s);
+
+    F0R(i, n) {
+        if(s[i] == GOAL[0] || s[i] == '?') {
+            string res = s;
+            bool ok = true;
+            FOR(j, i, i + SZ(GOAL)) {
+                if(j >= n) {
+                    ok = false;
+                    break;
+                }
+                if(res[j] == '?')
+                    res[j] = GOAL[j - i];
+                else if(res[j] != GOAL[j - i]) {
+                    ok = false;
+                    break;
+                }
+            }
+
+            if(ok && correct(res))
+                return mp(true, res);
+        }
+    }
+
+    return mp(false, s);
+}
+
 void solve() {
+    string s;
+    cin >> n >> s;
+
+    auto [b, res] = poss(s);
+
+    F0R(i, SZ(res))
+        if(res[i] == '?') res[i] = 'z';
+
+    if(b)
+        cout << "YES\n" << res << endl;
+    else
+        cout << "NO\n";
 
 }
 
@@ -101,7 +161,8 @@ int main() {
     int tc = 1;
     cin >> tc;
     FOR(i, 1, tc + 1) {
-        //cout << "Case #" << i << ": ";
+        //cout << "Case #" << i " << ": ";
         solve();
     }
 }
+
