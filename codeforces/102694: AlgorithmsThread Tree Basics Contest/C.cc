@@ -243,44 +243,63 @@ enable_if_t<IsC<T>::value, istream&> operator>>(istream& i, T& v) {
 // Begin code.
 ///////////////////////////////////////////////////////////////
 
-int BITCNT = 0;
-vi height;
-vvi adj, lift;
-
-int jumpUp(int u, int amt) {
-    for(int i = 0; u != -1 && (1 << i) <= amt; ++i)
-        if(amt & (1 << i))
-            u = lift[u][i];
-    return u;
-}
-
-int getLca(int u, int v) {
-    // Get to same height
-    if(height[u] > height[v])
-        u = jumpUp(u, height[u] - height[v]);
-    if(height[v] > height[u])
-        v = jumpUp(v, height[v] - height[u]);
-    assert(u != -1 && v != -1 && height[u] == height[v]);
-
-    if(u == v) return u;
-
-    for(int i = BITCNT - 1; ~i; --i) {
-        int jmpU = lift[u][i];
-        int jmpV = lift[v][i];
-
-        if(jmpU == -1 || jmpV == -1)
-            continue;
-
-        if(jmpU != jmpV) {
-            u = jmpU;
-            v = jmpV;
+struct LCA {
+  int n, logN, root;
+  vvi up;
+  vi h;
+  LCA(vvi& adj, int r = 0)
+      : n{SZ(adj)}, logN{31 - __builtin_clz(n)},
+        root{r}, up(n, vi(logN + 1, root)),
+        h(n, -1) { 
+    build(adj, root);
+  }
+  void build(vvi& adj, int v) {
+    queue<int> q;
+    q.push(v);
+    h[v] = 0;
+    while (SZ(q)) {
+      int v = q.front();
+      q.pop();
+      for (int u : adj[v])
+        if (h[u] == -1) {
+          h[u] = h[v] + 1;
+          q.push(u);
         }
-
     }
 
-    assert(lift[u][0] != -1 && lift[u][0] == lift[v][0]);
-    return lift[u][0];
-}
+    F0R (v, n)
+      for (int u : adj[v])
+        if (h[u] < h[v]) {
+          up[v][0] = u;
+        }
+
+    FOR (exp, 1, logN + 1)
+      F0R (v, n)
+        if (up[v][exp - 1] != -1) {
+          up[v][exp] = up[up[v][exp - 1]][exp - 1];
+        }
+  }
+  int jumpUp(int v, int amt) {
+    for (int i = 0; v != -1 && (1 << i) <= amt; ++i)
+      if (amt & (1 << i)) 
+        v = up[v][i];
+    return v;
+  }
+  int lca(int v, int u) {
+    v = jumpUp(v, max(0, h[v] - h[u]));
+    u = jumpUp(u, max(0, h[u] - h[v]));
+    if (u == v) return u;
+    for (int l = logN; ~l; --l) {
+      int jmpU = up[u][l], jmpV = up[v][l];
+      if (jmpU == -1 || jmpV == -1) continue;
+      if (jmpU != jmpV) {
+        u = jmpU;
+        v = jmpV;
+      }
+    }
+    return up[v][0];
+  }
+};
 
 int main() {
     cin.tie(0);
@@ -288,10 +307,8 @@ int main() {
 
     int n;
     cin >> n;
-    while((1 << BITCNT) <= n) BITCNT++;
 
-
-    adj.assign(n, vi());
+    vvi adj(n);
     F0R(i, n - 1) {
         int u, v;
         cin >> u >> v;
@@ -300,31 +317,7 @@ int main() {
         adj[v].pb(u);
     }
 
-    // Get heights
-    height.assign(n, -1);
-    queue<int> q;
-    q.push(0);
-    height[0] = 0;
-    while(SZ(q)) {
-        int v = q.front();
-        q.pop();
-        for(int u : adj[v]) if(height[u] == -1) {
-            height[u] = height[v] + 1;
-            q.push(u);
-        }
-    }
-
-    // Build binary lifting
-    lift.assign(n, vi(BITCNT, -1));
-    F0R(v, n)
-        for(int u : adj[v])
-            if(height[u] < height[v])
-                lift[v][0] = u;
-
-    FOR(exp, 1, BITCNT)
-        F0R(v, n)
-            if(lift[v][exp - 1] != -1)
-                lift[v][exp] = lift[lift[v][exp - 1]][exp - 1];
+    LCA lca(adj);
 
     int qs;
     cin >> qs;
@@ -333,17 +326,17 @@ int main() {
         cin >> a >> b >> c;
         a--; b--;
 
-        int lca = getLca(a, b);
+        int anc = lca.lca(a, b);
 
-        int dist = height[a] + height[b] - 2*height[lca];
+        int dist = lca.h[a] + lca.h[b] - 2*lca.h[anc];
         if(dist <= c) {
             cout << b + 1 << endl;
         } else {
-            if(height[a] - height[lca] <= c)
-                cout << jumpUp(a, c) + 1 << endl;
-            else
-                cout << jumpUp(b, dist - c) + 1 << endl;
+            if(lca.h[a] - lca.h[anc] >= c) {
+                cout << lca.jumpUp(a, c) + 1 << endl;
+            } else {
+                cout << lca.jumpUp(b, dist - c) + 1 << endl;
+            }
         }
     }
-
 }
