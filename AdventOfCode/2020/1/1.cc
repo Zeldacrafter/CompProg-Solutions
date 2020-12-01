@@ -1,15 +1,13 @@
 #include "../template.cc"
 
-int main() {
-    cin.tie(0);
-    ios_base::sync_with_stdio(0);
+const int N = 200;
 
-    int n = 200;
-    vi a(n);
+void solve() {
+    vi a(N);
     cin >> a;
 
-    F0R(i, n) 
-        FOR(j, i + 1, n)
+    F0R(i, N) 
+        FOR(j, i + 1, N)
             if(a[i] + a[j] == 2020)
                 cout << a[i]*a[j] << endl;
 }

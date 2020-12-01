@@ -1,3 +1,4 @@
+#pragma once
 ///////////////////////////////////////////////////////////////
 // Long template from: https://github.com/Zeldacrafter/CompProg
 //
@@ -543,4 +544,17 @@ template <typename... Ts> tuple<Ts...> operator-(tuple<Ts...> t) {
 template <typename... Ts> tuple<Ts...> operator+(tuple<Ts...> t) {
   for_each(t, [](auto& x, int) { x = +x; });
   return t;
+}
+
+///////////////////////////////////////////////////////////////
+// Begin Solution
+///////////////////////////////////////////////////////////////
+
+void solve();
+
+int main() {
+    cin.tie(0);
+    ios_base::sync_with_stdio(0);
+
+    solve();
 }
