@@ -2,7 +2,7 @@
 
 void solve() {
     vi a;
-    getInp([&](stringstream& cin, int i) {
+    getInp([&](auto& cin, int i) {
             int k;
             cin >> k;
             a.pb(k);   
