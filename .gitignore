@@ -1,11 +1,6 @@
-out/
-*.out
-.idea/
-*~
+**/*.out
+**/*.in
 input
 myOut
 output
-2
-.vscode/**
-**/*.in
 .cookie
