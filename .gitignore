@@ -8,3 +8,4 @@ output
 2
 .vscode/**
 **/*.in
+.cookie
