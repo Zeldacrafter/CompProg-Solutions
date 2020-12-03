@@ -2,8 +2,10 @@
 
 void solve() {
     ll res = 0;
-    vector<string> ss = getInp([&](auto& cin, int i) {
-        
+    getInp([&](auto& cin, int i) {
+        int k;
+        cin >> k;
+        res += k;
     });
     cout << res << endl;
 }
