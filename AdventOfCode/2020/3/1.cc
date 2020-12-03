@@ -1,11 +1,7 @@
 #include "../template.cc"
 
 void solve() {
-    vector<string> ss;
-    getInp([&](auto& cin, int i) {
-        ss.eb();
-        cin >> ss.back();
-    });
+    vector<string> ss = getInp();
 
     int w = SZ(ss[0]);
     int h = SZ(ss);

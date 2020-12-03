@@ -554,12 +554,18 @@ template <typename... Ts> tuple<Ts...> operator+(tuple<Ts...> t) {
 ///////////////////////////////////////////////////////////////
 
 template<typename F>
-void getInp(F f) {
+vector<string> getInp(F f) {
+    vector<string> res;
     string s;
-    for (int i = 0; getline(cin, s); ++i) {
+    for (int i = 0; getline(cin, s); ++i, res.pb(s)) {
         stringstream inp(s);
         f(inp, i);
     }
+    return res;
+}
+
+vector<string> getInp() {
+    return getInp([](stringstream&, int) {});
 }
 
 ///////////////////////////////////////////////////////////////
