@@ -40,6 +40,9 @@ bool ckmin(T& a, const T& b) { return a > b ? a = b, true : false; }
 template <typename T>
 bool ckmax(T& a, const T& b) { return a < b ? a = b, true : false; }
 
+const int dx[4] = {1, -1, 0, 0}, dy[4] = {0, 0, 1, -1};
+const int dx3[6] = {1, -1, 0, 0, 0, 0}, dy3[6] = {0, 0, 1, -1, 0, 0}, dz3[6] = {0, 0, 0, 0, 1, -1};
+
 // Output to 'cerr' if 'DEBUG' flag is set. Do nothing otherwise.
 #ifndef DEBUG
 #define DEBUG 0
