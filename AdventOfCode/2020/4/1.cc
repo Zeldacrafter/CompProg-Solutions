@@ -1,14 +1,20 @@
 #include "passport.hh"
 
+bool constTrue(const string&) { return true; }
+
+map<string, function<int(const string&)>> checks{
+    {"byr", constTrue },
+    {"iyr", constTrue },
+    {"eyr", constTrue },
+    {"hgt", constTrue },
+    {"hcl", constTrue },
+    {"ecl", constTrue },
+    {"pid", constTrue }
+};
+
 void solve() {
     Passports ps(getInp());
 
-    cout << count_if(ALL(ps), 
-        [](const auto& m) {
-            int cnt = 0;
-            for (const auto& [k, v] : m) 
-                cnt += checks.count(k);
-            return cnt == SZ(checks);
-        }) << endl;
+    cout << ps.countValid(checks) << endl;
 }
 
