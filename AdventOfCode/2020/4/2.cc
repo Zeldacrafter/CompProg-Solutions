@@ -40,9 +40,7 @@ map<string, function<ll(const string&)>> checks{
 
 void solve() {
     Passports ps(getInp());
-
-    cout << count_if(ALL(ps), [&](const auto& m) {
-                return Passports::getScore(m, checks) == SZ(checks);
-            }) << endl;
+    ps.removeNonMatching(checks, SZ(checks));
+    cout << SZ(ps) << endl;
 }
 

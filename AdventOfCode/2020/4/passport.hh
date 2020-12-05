@@ -15,32 +15,36 @@ int sstoi(const string& s) {
 }
 
 struct Passports : vector<map<string, string>> {
-    Passports(vector<string> ss, char itemSep = ':') {
+    Passports(vector<string> ss, string itemSep = ":") {
         parseAll(ss, itemSep);
     }
 
-    void parseAll(vector<string> ss, char itemSep) {
+    void parseAll(vector<string> ss, string itemSep) {
         map<string, string> curr;
         
         for(string& s : ss) {
             if(s == "") {
                 push_back(curr);
                 curr = map<string, string>();
-                continue;
-            }
-            stringstream cin(s);
-            while(cin.peek() != EOF) {
-                string key, value;
-                char sep;
-
-                while(cin.peek() == ' ') cin.get();
-                while(cin.peek() != itemSep) key.pb(cin.get()); 
-                cin >> sep >> value;
-                curr[key] = value;
+            } else {
+                vector<string> tokens = split(s, " ");
+                for(string& token : tokens) {
+                    auto [k, v] = splitP(token, itemSep);
+                    curr[k] = v;
+                }
             }
         }
         if(!curr.empty())
             push_back(curr);
+    }
+
+    void removeNonMatching(map<string, function<ll(const string&)>> checks, ll neededScore) {
+        erase(
+            remove_if(ALL(*this), 
+                [&](const auto& pp) { return Passports::getScore(pp, checks) < neededScore; }
+            ), 
+            end()
+        );
     }
 
     static ll getScore(map<string, string> passport, map<string, function<ll(const string&)>> checks) {
@@ -50,6 +54,4 @@ struct Passports : vector<map<string, string>> {
                 cnt += checks[k](v);
         return cnt;
     }
-
-    
 };
