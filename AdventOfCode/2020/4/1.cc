@@ -2,7 +2,7 @@
 
 bool constTrue(const string&) { return true; }
 
-map<string, function<int(const string&)>> checks{
+map<string, function<ll(const string&)>> checks{
     {"byr", constTrue },
     {"iyr", constTrue },
     {"eyr", constTrue },
@@ -15,6 +15,8 @@ map<string, function<int(const string&)>> checks{
 void solve() {
     Passports ps(getInp());
 
-    cout << ps.countValid(checks) << endl;
+    cout << count_if(ALL(ps), [&](const auto& m) {
+                return Passports::getScore(m, checks) == SZ(checks);
+            }) << endl;
 }
 

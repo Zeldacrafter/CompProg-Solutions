@@ -3,7 +3,7 @@
 void solve() {
     vector<string> ss = getInp();
 
-    vector<bool> v(128*8*2);
+    vector<bool> v(1 << 10);
     for(string& s : ss) {
         ll id = 0;
         for(char c : s) {

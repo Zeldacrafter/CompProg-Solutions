@@ -43,18 +43,12 @@ struct Passports : vector<map<string, string>> {
             push_back(curr);
     }
 
-    int countValid(map<string, function<int(const string&)>> checks) {
-        return count_if(ALL(*this), [&](const auto& m) {
-                return Passports::isValid(m, checks);
-            });
-
-    }
-
-    static bool isValid(map<string, string> passport, map<string, function<int(const string&)>> checks) {
-        int cnt = 0;
+    static ll getScore(map<string, string> passport, map<string, function<ll(const string&)>> checks) {
+        ll cnt = 0;
         for(const auto& [k, v] : passport)
-            cnt += checks.count(k) && checks[k](v);
-        return cnt == SZ(checks);
+            if(checks.count(k))
+                cnt += checks[k](v);
+        return cnt;
     }
 
     
