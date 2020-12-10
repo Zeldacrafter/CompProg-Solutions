@@ -5,6 +5,18 @@ void solve() {
     vector<string> ss = getInp([&](auto& cin, int i) {
         
     });
+
+    /*
+    ss.pb("");
+    for(string& s : ss) {
+        if(s == "") {
+
+        } else {
+
+        }
+    }
+    */
+
     cout << res << endl;
 }
 
