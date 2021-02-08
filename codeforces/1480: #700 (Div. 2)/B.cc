@@ -616,37 +616,18 @@ template <typename... Ts> tuple<Ts...> operator+(tuple<Ts...> t) {
 // Begin solution
 ///////////////////////////////////////////////////////////////
 
-ll A, B, n;
-
-ll getDmg(pair<ll, ll> m) {
-    return (m.se + A - 1)/A * m.fi;
-}
-
 void solve() {
+    ll A, B, n;
     cin >> A >> B >> n;
 
-    vector<pair<ll, ll>> mons(n);
-    F0R(_, n)
-        cin >> mons[_].fi;
-    F0R(_, n)
-        cin >> mons[_].se;
+    vector<ll> dmg(n), hp(n);
+    cin >> dmg >> hp;
 
-    sort(ALL(mons));
+    F0R(i, n)
+        B -= (hp[i] + A - 1)/A * dmg[i];
+    B += *max_element(ALL(dmg));
 
-    auto last = mons.back();
-    mons.pop_back();
-
-    for(auto m : mons)
-        B -= getDmg(m);
-
-    if(B <= 0) {
-        cout << "NO\n";
-        return;
-    }
-
-    int hitsTodo = (B + last.fi - 1)/last.fi;
-    cout << (A * hitsTodo >= last.se ? "YES\n" : "NO\n");
-    
+    cout << (B <= 0 ? "NO\n" : "YES\n");
 }
 
 int main() {
@@ -660,4 +641,3 @@ int main() {
         solve();
     }
 }
-

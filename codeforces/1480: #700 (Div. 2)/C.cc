@@ -622,7 +622,7 @@ int cntAmt = 0;
 int query(int i) {
     assert(++cntAmt <= 100);
 
-    cout << "? " << i << endl;
+    cout << "? " << i + 1 << endl;
     cout.flush();
 
     int res;
@@ -643,46 +643,15 @@ int main() {
     int n;
     cin >> n;
 
-    vi a(n + 2, -1);
-    a[0] = a[n + 1] = n + 1;
-    int l = 0;
-    int r = n + 1;
-    int m = (n + 1)/2;
-    a[m] = query(m);
-
-    while(l + 1 != m || m + 1 != r) {
-        assert(l < m);
-        assert(m < r);
-
-        if(l + 1 != m) {
-            int qPos = (l + m)/2;
-            if(a[qPos] == -1)
-                a[qPos] = query(qPos);
-
-            if(a[qPos] > a[m]) {
-                l = qPos;
-            } else {
-                r = m;
-                m = qPos;
-                continue;
-            }
-        }
-
-        if(r + 1 != m) {
-            int qPos = (m + r + 1)/2;
-            if(a[qPos] == -1)
-                a[qPos] = query(qPos);
-
-            if(a[qPos] > a[m]) {
-                r = qPos;
-            } else {
-                l = m;
-                m = qPos;
-            }
+    int l = 0, r = n - 1;
+    while(l != r) {
+        int m = (l + r)/2;
+        if(query(m) < query(m + 1)) {
+            r = m;
+        } else {
+            l = m + 1;
         }
     }
-    assert(a[l] > a[m]);
-    assert(a[r] > a[m]);
-    ans(m);
+    ans(l + 1);
 }
 
