@@ -634,73 +634,106 @@ template <typename... Ts> tuple<Ts...> operator+(tuple<Ts...> t) {
 // Begin solution
 ///////////////////////////////////////////////////////////////
 
+template <typename F>
 struct edge {
-  edge(int from, int to, ll capacity, ll flow = 0)
+  edge(int from, int to, F capacity, F flow = 0)
       : mfrom(from), mto(to), mcapacity(capacity), mflow(flow) {}
   int mfrom, mto;
-  ll mcapacity, mflow;
+  F mcapacity, mflow;
   int other(int v) { return v == mfrom ? mto : mfrom; }
-  ll capacity(int v) { return v == mfrom ? mcapacity : 0; }
-  ll flow(int v) { return v == mfrom ? mflow : -mflow; }
-  void adjust(int v, ll amount) {
+  F capacity(int v) { return v == mfrom ? mcapacity : 0; }
+  F flow(int v) { return v == mfrom ? mflow : -mflow; }
+  void adjust(int v, F amount) {
     mflow += v == mfrom ? amount : -amount;
   }
 };
-vector<edge> edges;
-vvi adj;
-void addEdge(int from, int to, ll c, ll f = 0) {
-  edges.eb(from, to, c, f);
-  adj[from].pb(SZ(edges) - 1);
-  adj[to].pb(SZ(edges) - 1);
-}
-ostream& operator<<(ostream& o, const edge& e) {
+template <typename F>
+ostream& operator<<(ostream& o, const edge<F>& e) {
   return o << e.mfrom << "-- " << e.mflow << '/'
            << e.mcapacity << " -->" << e.mto;
 }
 
-vi dist, ptr;
-const ll inf = 1e16;
-bool dinic_bfs(int s, int t) {
-  dist.assign(SZ(adj), SZ(adj));
-  queue<int> q;
-  q.push(s);
-  dist[s] = 0;
-  while (SZ(q)) {
-    int v = q.front(); q.pop();
-    for (int i : adj[v]) {
-      edge& e = edges[i];
-      if (dist[e.other(v)] == SZ(adj) && e.flow(v) < e.capacity(v)) {
-        dist[e.other(v)] = dist[v] + 1;
-        q.push(e.other(v));
+template <typename F = ll>
+struct DC {
+  vector<edge<F>> edges;
+  vvi adj;
+  vi dist, ptr;
+  int S, T, N;
+  DC(int n, int m = 0, int s = -1, int t = -1) {
+    reset(n, m, s, t);
+  }
+  void buildMatchingEdges(int m) {
+    F0R (i, N) add(S, i, 1);
+    F0R (i, m) add(N + i, T, 1);
+  }
+  int add(int from, int to, F c = numeric_limits<F>::max(), F f = 0) {
+    edges.eb(from, to, c, f);
+    adj[from].pb(SZ(edges) - 1);
+    adj[to].pb(SZ(edges) - 1);
+    return SZ(edges) - 1;
+  }
+  int match(int from, int to) { return add(from, N + to, 1);}
+  vii matching() {
+    vii res; res.reserve(maxflow());
+    for (const auto& e : edges)
+      if (e.mflow == 1 and e.mfrom != S and e.mto != T)
+        res.eb(e.mfrom, e.mto - N);
+    return res;
+  }
+  void clear() { edges.clear(); adj.clear(); }
+  void reset(int n, int m = 0, int s = -1, int t = -1) {
+    clear();
+    adj.resize((N = n) + m + (s == -1) + (t == -1));
+    S = s == -1 ? n + m : s;
+    T = t == -1 ? n + m + (s == -1) : t;
+    if (m != 0) buildMatchingEdges(m);
+  }
+  bool bfs(int s, int t) {
+    dist.assign(SZ(adj), SZ(adj));
+    queue<int> q;
+    q.push(s);
+    dist[s] = 0;
+    while (SZ(q)) {
+      int v = q.front(); q.pop();
+      for (int i : adj[v]) {
+        auto& e = edges[i];
+        if (dist[e.other(v)] == SZ(adj) && e.flow(v) < e.capacity(v)) {
+          dist[e.other(v)] = dist[v] + 1;
+          q.push(e.other(v));
+        }
       }
     }
+    return dist[t] < SZ(adj);
   }
-  return dist[t] < SZ(adj);
-}
-ll dinic_dfs(int v, int t, ll available) {
-  if (v == t || !available) return available;
-  ll pushed = 0;
-  for (; ptr[v] < SZ(adj[v]); ++ptr[v]) {
-    edge& e = edges[adj[v][ptr[v]]];
-    if (dist[v] + 1 != dist[e.other(v)])
-      continue;
-    ll wasPushed =
-        dinic_dfs(e.other(v), t,
-                  min(available - pushed, e.capacity(v) - e.flow(v)));
-    pushed += wasPushed;
-    e.adjust(v, wasPushed);
-    if (pushed == available) return pushed;
+  F dfs(int v, int t, F available) {
+    if (v == t || !available) return available;
+    F pushed = 0;
+    for (; ptr[v] < SZ(adj[v]); ++ptr[v]) {
+      auto& e = edges[adj[v][ptr[v]]];
+      if (dist[v] + 1 != dist[e.other(v)])
+        continue;
+      F wasPushed = dfs(e.other(v), t,
+                        min(available - pushed, e.capacity(v) - e.flow(v)));
+      pushed += wasPushed;
+      e.adjust(v, wasPushed);
+      if (pushed == available) return pushed;
+    }
+    return pushed;
   }
-  return pushed;
-}
-ll maxflow(int s, int t) {
-  ll f = 0;
-  while (1) {
-    if (!dinic_bfs(s, t)) return f;
-    ptr.assign(SZ(adj), 0);
-    f += dinic_dfs(s, t, inf);
+  F maxflow() {
+    return maxflow(S, T);
   }
-}
+  F maxflow(int s, int t) {
+    F f = 0;
+    for (;;) {
+      if (!bfs(s, t)) return f;
+      ptr.assign(SZ(adj), 0);
+      f += dfs(s, t, numeric_limits<F>::max());
+    }
+  }
+};
+using BM = DC<int>;
+
 
 int main() {
     cin.tie(0);
@@ -709,12 +742,10 @@ int main() {
     int rows, cols, n;
     cin >> rows >> cols >> n;
 
-    adj = vvi(2 + cols + 2*n + rows);
-    int S = SZ(adj) - 2;
-    int T = SZ(adj) - 1;
+    DC dinic(cols + 2*n + rows);
 
     // to layer 1
-    F0R(i, cols) addEdge(S, i, 1);
+    F0R(i, cols) dinic.add(dinic.S, i, 1);
 
     F0R(i, n) {
         int row1, col1, row2, col2;
@@ -723,17 +754,17 @@ int main() {
 
         // to layer 2
         FOR(j, col1, col2 + 1)
-            addEdge(j, cols + i, 1);
+            dinic.add(j, cols + i, 1);
         // to layer 3
-        addEdge(cols + i, cols + n + i, 1);
+        dinic.add(cols + i, cols + n + i, 1);
         // to layer 4
         FOR(j, row1, row2 + 1)
-            addEdge(cols + n + i, cols + 2*n + j, 1);
+            dinic.add(cols + n + i, cols + 2*n + j, 1);
     }
     // to layer 5
-    F0R(i, rows) addEdge(cols + 2*n + i, T, 1);
+    F0R(i, rows) dinic.add(cols + 2*n + i, dinic.T, 1);
 
-    cout << maxflow(S, T) << endl;
+    cout << dinic.maxflow() << endl;
 
 }
 
