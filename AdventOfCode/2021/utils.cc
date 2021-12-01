@@ -8,10 +8,14 @@ template<typename F>
 vector<string> getInp(F f) {
     vector<string> res;
     string s;
+    int emptyLineCounter = 0;
     for (int i = 0; getline(cin, s); ++i, res.pb(s)) {
+        if (s == "") emptyLineCounter++;
         stringstream inp(s);
         f(inp, i);
     }
+    if (emptyLineCounter)
+        dout << "Number of empty lines: " << emptyLineCounter << endl;
     return res;
 }
 

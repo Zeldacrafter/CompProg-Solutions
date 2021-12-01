@@ -7,7 +7,7 @@ import os
 import sys
 import http.client
 
-year = 2020
+year = 2021
 
 def getCookie() -> str:
     try:
@@ -51,3 +51,4 @@ if __name__ == '__main__':
     f = open("%d/input" % day, "w")
     f.write(input.decode("utf-8"))
     print("Wrote input to \"%d/input\"!" % day)
+    sys.exit(0)

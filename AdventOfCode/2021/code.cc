@@ -2,10 +2,10 @@
 
 void solve() {
     ll res = 0;
-    vi inp;
+    vector<ll> inp;
     vector<string> ss = getInp([&](auto& cin, int i) {
-        //int _k; cin >> _k; inp.pb(_k);
-        
+        //ll _k; cin >> _k; inp.pb(_k);
+
     });
 
     /*
