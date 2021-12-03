@@ -1,6 +1,4 @@
 **/*.out
 **/*.in
-input
 myOut
 output
-.cookie
