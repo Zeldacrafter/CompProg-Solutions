@@ -8,7 +8,7 @@ void solve() {
 
         if(x1 == x2) {
             if(y1 > y2) swap(y1, y2);
-            FOR(i, y1, y2 + 1) amt[mp(x1,i)]++;
+            FOR(i, y1, y2 + 1) amt[mp(x1, i)]++;
         } else if (y1 == y2) {
             if(x1 > x2) swap(x1, x2);
             FOR(i, x1, x2 + 1) amt[mp(i, y1)]++;
@@ -17,8 +17,7 @@ void solve() {
 
     ll res = 0;
     for(auto [k, v] : amt)
-        if(v > 1)
-            res++;
+        res += v > 1;
     cout << res << endl;
 }
 
