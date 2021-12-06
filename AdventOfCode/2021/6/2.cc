@@ -1,5 +1,7 @@
 #include "../utils.cc"
+#include "static_matrix.cc"
 
+// Solution in log(iterations)
 void solve() {
     vector<ll> inp(9);
     getInp([&](auto& cin, int) {
@@ -10,13 +12,13 @@ void solve() {
         } while(cin >> c);
     });
 
-    F0R(i, 256) {
-        vector<ll> inpNew(9);
-        inpNew[6] = inpNew[8] = inp[0];
-        FOR(i, 1, SZ(inp)) inpNew[i - 1] += inp[i];
-        inp = inpNew;
-    }
+    matrix<9, ll> m{};
+    F0R(i, 9) m[(i + 1) % 9][i] = 1;
+    m[0][6] = 1;
 
-    cout << accumulate(ALL(inp), 0ll) << endl;
+    m = m.pow(256);
+
+    ll res = 0;
+    F0R(r, SZ(m)) F0R(c, SZ(m)) res += inp[r]*m[r][c];
+    cout << res << endl;
 }
-
