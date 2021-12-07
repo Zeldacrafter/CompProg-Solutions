@@ -5,7 +5,13 @@ void solve() {
     vector<ll> inp;
     vector<string> ss = getInp([&](auto& cin, int i) {
         //ll _k; cin >> _k; inp.pb(_k);
-
+        /*
+        ll k; char c;
+        do {
+            cin >> k;
+            inp.pb(k);
+        } while(cin >> c);
+        */
     });
 
     /*
