@@ -6,34 +6,34 @@ int toInt(const vector<bool>& bits) {
     return res;
 }
 
-vector<bool> read(queue<bool>& bits, int n) {
+vector<bool> read(queue<bool>& bits, int n, int& parsed) {
     vector<bool> res;
     F0R(i, n) {
         res.pb(bits.front());
         bits.pop();
     }
+    parsed += n;
     return res;
 }
 
 ii decode(queue<bool>& bits) {
     int parsed = 0;
     
-    int version = toInt(read(bits, 3)); parsed += 3;
-    int id = toInt(read(bits, 3)); parsed += 3;
+    int version = toInt(read(bits, 3, parsed));
+    int id = toInt(read(bits, 3, parsed));
 
     if(id == 4) {
         vector<bool> content;
         while(true) {
-            bool stopBit = read(bits, 1)[0];
-            F0R(j, 4) content.pb(read(bits, 1)[0]);
-            parsed += 5;
+            bool stopBit = read(bits, 1, parsed)[0];
+            F0R(j, 4) content.pb(read(bits, 1, parsed)[0]);
             if(!stopBit) break;
         }
     } else {
-        bool lenId = read(bits, 1)[0]; parsed++;
+        bool lenId = read(bits, 1, parsed)[0];
 
         if(!lenId) {
-            int len = toInt(read(bits, 15)); parsed += 15;
+            int len = toInt(read(bits, 15, parsed));
 
             while(len) {
                 auto[p, v] = decode(bits);
@@ -41,7 +41,7 @@ ii decode(queue<bool>& bits) {
                 parsed += p; len -= p;
             }
         } else {
-            int subPacketCnt = toInt(read(bits, 11)); parsed += 11;
+            int subPacketCnt = toInt(read(bits, 11, parsed));
             F0R(_, subPacketCnt) {
                 auto [p, v] = decode(bits);
                 version += v;
