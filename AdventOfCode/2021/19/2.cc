@@ -1,42 +1,62 @@
 #include "../utils.cc"
 
 #undef endl
-
 typedef tuple<int, int, int> coord;
 
 coord translate(const coord& c, int p) {
     auto [x, y, z] = c;
-    if(p & (1 << 0)) x = -x;
-    if(p & (1 << 1)) y = -y;
-    if(p & (1 << 2)) z = -z;
-    if(p & (1 << 3)) { int tmp = -1; swap(x, tmp); swap(z, x); swap(y, z); swap(tmp, y); }
-    if(p & (1 << 4)) { int tmp = -1; swap(x, tmp); swap(z, x); swap(y, z); swap(tmp, y); }
-    if(p & (1 << 5)) swap(x, y);
-    return mt(x, y, z);
+    switch(p) {
+        case 0: return mt( x,  y,  z);
+        case 1: return mt(-x, -y,  z);
+        case 2: return mt(-x,  y, -z);
+        case 3: return mt( x, -y, -z);
+
+        case 4: return mt( y,  z,  x);
+        case 5: return mt(-y, -z,  x);
+        case 6: return mt(-y,  z, -x);
+        case 7: return mt( y, -z, -x);
+
+        case 8:  return mt( z,  x,  y);
+        case 9:  return mt(-z, -x,  y);
+        case 10: return mt(-z,  x, -y);
+        case 11: return mt( z, -x, -y);
+
+        case 12: return mt(-z,  y,  x);
+        case 13: return mt( z, -y,  x);
+        case 14: return mt( z,  y, -x);
+        case 15: return mt(-z, -y, -x);
+
+        case 16: return mt(-y,  x,  z);
+        case 17: return mt( y, -x,  z);
+        case 18: return mt( y,  x, -z);
+        case 19: return mt(-y, -x, -z);
+
+        case 20: return mt(-x,  z,  y);
+        case 21: return mt( x, -z,  y);
+        case 22: return mt( x,  z, -y);
+        case 23: return mt(-x, -z, -y);
+
+        default: assert(false);
+    }
+    return c;
 }
 
-pair<bool, coord> match(vector<coord>& s1, const vector<coord>& s2) {
-    F0R(origin1, SZ(s1)) {
-        vector<coord> diffs1(SZ(s1));
-        F0R(i, SZ(s1)) diffs1[i] = s1[i] - s1[origin1];
-
-        F0R(origin2, SZ(s2)) {
-            vector<coord> diffs2(SZ(s2));
-            F0R(i, SZ(s2)) diffs2[i] = s2[i] - s2[origin2];
-
-            F0R(perm, (1 << 6)) {
-                vector<bool> matched(SZ(s2));
-                vii match;
-                F0R(i, SZ(s1)) F0R(j, SZ(s2)) {
-                    if(diffs1[i] == translate(diffs2[j], perm)) {
-                        matched[j] = true;
-                        match.eb(i, j);
+pair<bool, coord> match(set<coord>& s1, const vector<coord>& s2) {
+    for(coord o1 : s1) {
+        for(coord o2 : s2) {
+            F0R(perm, 24) {
+                int match = 0;
+                coord diff;
+                for(coord x : s1) for(coord y : s2) {
+                    if(x - o1 == translate(y - o2, perm)) {
+                        diff = x - translate(y, perm);
+                        match++;
                         break;
                     }
                 }
-                if(SZ(match) >= 12) {
-                    coord diff = s1[match[0].fi] - translate(s2[match[0].se], perm);
-                    F0R(i, SZ(s2)) s1.pb(translate(s2[i], perm) + diff);
+                if(match >= 12) {
+                    for(coord x : s2)
+                        s1.insert(translate(x, perm) + diff);
                     return mp(true, translate(mt(0, 0, 0), perm) + diff);
                 }
             }
@@ -64,17 +84,13 @@ void solve() {
     vi done(SZ(inp), false);
     done[0] = true;
 
-    // TODO: Use a set for 'matched'
-    vector<coord> matched(ALL(inp[0])), sats(SZ(inp));
-
+    set<coord> matched(ALL(inp[0]));
+    vector<coord> sats(SZ(inp));
     while(find(ALL(done), false) != done.end()) {
         F0R(i, SZ(done)) if(!done[i]) {
             auto [b, c] = match(matched, inp[i]);
             if(done[i] |= b) {
                 cout << "Match: " << i << endl;
-                sort(ALL(matched)); // TODO Redundant with set
-                matched.erase(unique(ALL(matched)), matched.end());
-
                 sats[i] = c;
             }
         }
