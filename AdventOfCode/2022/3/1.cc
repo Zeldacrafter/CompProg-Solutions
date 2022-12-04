@@ -2,7 +2,7 @@
 
 void solve() {
     ll res = 0;
-    vector<string> ss = getInp([&](auto& cin, int) {
+    getInp([&](auto& cin, int) {
         string s; cin >> s;
         
         char c = *(set(SZ(s)/2 + ALL(s)) & 
