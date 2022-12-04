@@ -6,8 +6,7 @@ void solve() {
         char c; int l1, l2, h1, h2;
         cin >> l1 >> c >> h1 >> c >> l2 >> c >> h2;
 
-        if((l1 <= l2 && l2 <= h1) || (l2 <= l1 && l1 <= h2))
-            res++;
+        res += (l1 <= l2 && l2 <= h1) || (l2 <= l1 && l1 <= h2);
     });
 
     cout << res << endl;
