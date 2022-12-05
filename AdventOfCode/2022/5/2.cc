@@ -21,7 +21,7 @@ void solve() {
         cin >> s >> amt >> s >> from >> s >> to;
         from--; to--;
 
-        stacks[to] += stacks[from].substr(SZ(stacks[from]) - amt);
+        stacks[to].insert(stacks[to].end(), SZ(stacks[from]) - amt + ALL(stacks[from]));
         stacks[from].resize(SZ(stacks[from]) - amt);
     });
 
