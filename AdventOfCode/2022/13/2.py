@@ -1,4 +1,5 @@
 import fileinput
+import numpy as np
 from functools import cmp_to_key
 
 def comp(v1, v2):
@@ -14,9 +15,7 @@ def comp(v1, v2):
     elif isinstance(v2, list):
         return comp([v1], v2)
     else:
-        if v1 == v2: return 0
-        elif v1 < v2: return -1
-        else: return 1
+        return np.sign(v1 - v2)
 
 allPkgs = [ [[2]], [[6]] ]
 for l in fileinput.input():
@@ -25,8 +24,4 @@ for l in fileinput.input():
 
 allPkgs.sort(key=cmp_to_key(comp))
 
-res2 = 1
-for i in range(len(allPkgs)):
-    if allPkgs[i] == [[2]] or allPkgs[i] == [[6]]:
-        res2 *= i + 1
-print(res2)
+print((allPkgs.index([[2]]) + 1)*(allPkgs.index([[6]]) + 1))

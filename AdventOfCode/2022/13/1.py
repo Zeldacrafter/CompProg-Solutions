@@ -1,4 +1,5 @@
 import fileinput
+import numpy as np
 
 
 def comp(v1, v2):
@@ -14,16 +15,13 @@ def comp(v1, v2):
     elif isinstance(v2, list):
         return comp([v1], v2)
     else:
-        if v1 == v2: return 0
-        elif v1 < v2: return -1
-        else: return 1
+        return np.sign(v1 - v2)
+
+def lt(v1, v2): return comp(v1, v2) == -1
 
 res1 = 0
-for i, l in enumerate(fileinput.input()):
-    if i % 3 == 0:
-        arr1 = eval(l)
-    elif i % 3 == 1:
-        arr2 = eval(l)
-        if comp(arr1, arr2) != 1:
-            res1 += 1 + i//3
+inp = list(fileinput.input())
+for i in range((len(inp)+2)//3):
+    if lt(eval(inp[3*i]), eval(inp[3*i+1])):
+        res1 += 1 + i
 print(res1)
