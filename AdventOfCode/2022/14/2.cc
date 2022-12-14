@@ -35,8 +35,6 @@ void solve() {
     ll res = 0;
     while(grid[X_OFFSET + 500][0] == EMPTY) {
         for(int x = X_OFFSET + 500, y = 0;; ++y) {
-            if(y == maxY) goto end;
-
             if(grid[x][y + 1] == EMPTY);
             else if (grid[x - 1][y + 1] == EMPTY)
                 x--;

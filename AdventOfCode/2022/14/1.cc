@@ -34,7 +34,10 @@ void solve() {
     ll res = 0;
     while(true) {
         for(int x = X_OFFSET + 500, y = 0;; ++y) {
-            if(y == maxY) goto end;
+            if(y == maxY) {
+                cout << res << endl;
+                return;
+            }
 
             if(grid[x][y + 1] == EMPTY);
             else if (grid[x - 1][y + 1] == EMPTY)
@@ -48,6 +51,5 @@ void solve() {
             }
         }
     }
-end: cout << res << endl;
 }
 
