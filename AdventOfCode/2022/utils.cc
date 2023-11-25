@@ -1,5 +1,5 @@
 #pragma once
-#include "/home/al/git/CompProg/code/utils/ops.cc"
+#include "/home/alexp/git/CompProg/code/utils/ops.cc"
 
 ///////////////////////////////////////////////////////////////
 // https://github.com/Zeldacrafter/CompProg/blob/master/code/utils/y_combinator.cc
@@ -28,12 +28,32 @@ decltype(auto) y_combinator(F&& f) {
 ///////////////////////////////////////////////////////////////
 
 template<typename F>
-vector<string> getInp(F f) {
+vector<string> getInp(F f, string regexPattern = "") {
+    
     vector<string> res;
     string s;
     int emptyLineCounter = 0;
     for (int i = 0; getline(cin, s); ++i, res.pb(s)) {
         if (s == "") emptyLineCounter++;
+
+        // Match regex is exists:
+        if(regexPattern != "") {
+          regex re(regexPattern);
+
+          smatch match;
+          if(regex_search(s, match, re)) {
+            string resS = "";
+            for (auto submatch : match) {
+              if (string(submatch) != s) {
+                if(resS != "") resS += " ";
+                resS += submatch;
+              }
+            }
+            s = resS;
+          } else {
+            dout << "Input line \"" << s << "\" does not match regex string!" << endl;
+          }
+        }
         stringstream inp(s);
         f(inp, i);
     }

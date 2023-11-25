@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if ./getProblem.py $1
+if python3 getProblem.py $1
 then
     cp --no-clobber code.cc $1/1.cc
     cd $1
