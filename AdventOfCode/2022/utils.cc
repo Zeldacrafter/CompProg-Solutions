@@ -1,5 +1,5 @@
 #pragma once
-#include "/home/alexp/git/CompProg/code/utils/ops.cc"
+#include "/home/al/git/CompProg/code/utils/ops.cc"
 
 ///////////////////////////////////////////////////////////////
 // https://github.com/Zeldacrafter/CompProg/blob/master/code/utils/y_combinator.cc
@@ -28,7 +28,7 @@ decltype(auto) y_combinator(F&& f) {
 ///////////////////////////////////////////////////////////////
 
 template<typename F>
-vector<string> getInp(F f, string regexPattern = "") {
+vector<string> getInp(F f, string regexPattern) {
     
     vector<string> res;
     string s;
@@ -54,6 +54,23 @@ vector<string> getInp(F f, string regexPattern = "") {
             dout << "Input line \"" << s << "\" does not match regex string!" << endl;
           }
         }
+        stringstream inp(s);
+        f(inp, i);
+    }
+    if (emptyLineCounter)
+        dout << "Number of empty lines: " << emptyLineCounter << endl;
+    return res;
+}
+
+template<typename F>
+vector<string> getInp(F f) {
+    
+    vector<string> res;
+    string s;
+    int emptyLineCounter = 0;
+    for (int i = 0; getline(cin, s); ++i, res.pb(s)) {
+        if (s == "") emptyLineCounter++;
+
         stringstream inp(s);
         f(inp, i);
     }
