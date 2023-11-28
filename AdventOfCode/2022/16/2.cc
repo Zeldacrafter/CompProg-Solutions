@@ -1,7 +1,7 @@
 #include "../utils.cc"
 
 typedef vector<vvi> vvvi;
-
+typedef vector<vvvi> vvvvi;
 
 void solve() {
     map<string, int> idx;
@@ -38,18 +38,25 @@ void solve() {
 
     const int n = SZ(adj);
 
-    vvvi dp(31, vvi(n, vi(1 << npos, -1)));
-    dp[0][start][0] = 0;
-    F0R(i, 30) F0R(j, n) F0R(k, 1 << npos) {
-        if (dp[i][j][k] == -1) continue;
-        if (~pos[j] && !((k >> pos[j]) & 1))
-            ckmax(dp[i + 1][j][k | (1 << pos[j])], dp[i][j][k] + (30 - i - 1) * flow[j]);
-        for (int u : adj[j])
-            ckmax(dp[i + 1][u][k], dp[i][j][k]);
+    vvvvi dp(27, vvvi(n, vvi(n, vi(1 << npos, -1))));
+    dp[0][start][start][0] = 0;
+    F0R (i, 26) F0R (j, n) F0R (k, n) F0R (l, 1 << npos) {
+        if (!~dp[i][j][k][l]) continue;
+        vector<tuple<int, int, int>> a, b;
+        if (~pos[j] && !((l >> pos[j]) & 1))
+            a.eb(j, l | (1 << pos[j]), (26 - i - 1) * flow[j]);
+        if (k != j && ~pos[k] && !((l >> pos[k]) & 1))
+            b.eb(k, l | (1 << pos[k]), (26 - i - 1) * flow[k]);
+        for (int u : adj[j]) a.eb(u, l, 0);
+        for (int u : adj[k]) b.eb(u, l, 0);
+        
+        for (auto [vv, ov, vval] : a)
+            for (auto [pp, op, pval] : b)
+                ckmax(dp[i + 1][vv][pp][ov | op], dp[i][j][k][l] + vval + pval);
     }
-
     int best = 0;
-    F0R (j, n) F0R (k, 1 << npos) ckmax(best, dp[26][j][k]);
+    F0R (j, n) F0R (k, n) F0R (l, 1 << npos) ckmax(best, dp[26][j][k][l]);
     cout << best << endl;
+
 }
 
