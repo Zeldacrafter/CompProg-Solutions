@@ -25,17 +25,20 @@ void solve() {
     ii start;
     F0R(r, SZ(ss)) F0R(c, SZ(ss[0])) if(ss[r][c] == 'S') start = mp(r, c);
 
-    set<ii> loop, adj;
+    set<ii> loop, adj, adj2;
     for(ii dir : vector<ii>{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}) {
         set<ii> seen;
+        adj.clear(); adj2.clear();
 
         ii curr = start;
-        if(curr == start) adj = {curr + dir};
         seen.insert(start);
         while(true) {
             if(!getDir(ss[curr.fi][curr.se], dir)) break;
 
-            if(curr + dir == start) adj.insert(curr);
+            if(curr == start || curr + dir == start) {
+                adj.insert(dir);
+                adj2.insert(-dir);
+            }
             curr += dir;
             if(!seen.insert(curr).se) {
                 if(curr == start) loop = seen;
@@ -45,15 +48,15 @@ void solve() {
         if(SZ(loop)) break;
     }
 
-    const map<set<ii>, char> replace {
-        {{start + mp( 0, -1), start + mp( 0,  1)}, '|'},
-        {{start + mp(-1,  0), start + mp( 1,  0)}, '-'},
-        {{start + mp(-1,  0), start + mp( 0,  1)}, 'L'},
-        {{start + mp( 0,  1), start + mp( 1,  0)}, 'F'},
-        {{start + mp( 1,  0), start + mp( 0, -1)}, '7'},
-        {{start + mp( 0, -1), start + mp(-1,  0)}, 'J'}
+    map<set<ii>, char> replace {
+        {{mp(-1, 0), mp(1,  0)}, '|'},
+        {{mp( 0, 1), mp(0, -1)}, '-'},
+        {{mp( 1, 0), mp(0,  1)}, 'L'},
+        {{mp( 1, 0), mp(0, -1)}, 'F'},
+        {{mp( 1, 0), mp(0,  1)}, '7'},
+        {{mp( 1, 0), mp(0, -1)}, 'J'}
     };
-    ss[start.fi][start.se] = replace[adj];
+    ss[start.fi][start.se] = replace[replace.count(adj) ? adj : adj2];
 
     int res = 0;
     F0R(r, SZ(ss)) {
