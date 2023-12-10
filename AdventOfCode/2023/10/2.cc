@@ -25,15 +25,17 @@ void solve() {
     ii start;
     F0R(r, SZ(ss)) F0R(c, SZ(ss[0])) if(ss[r][c] == 'S') start = mp(r, c);
 
-    set<ii> loop;
+    set<ii> loop, adj;
     for(ii dir : vector<ii>{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}) {
         set<ii> seen;
 
         ii curr = start;
+        if(curr == start) adj = {curr + dir};
         seen.insert(start);
         while(true) {
             if(!getDir(ss[curr.fi][curr.se], dir)) break;
 
+            if(curr + dir == start) adj.insert(curr);
             curr += dir;
             if(!seen.insert(curr).se) {
                 if(curr == start) loop = seen;
@@ -43,19 +45,27 @@ void solve() {
         if(SZ(loop)) break;
     }
 
-    // Dont wannt do this in general :(
-    ss[start.fi][start.se] = 'J';
+    const map<set<ii>, char> replace {
+        {{start + mp( 0, -1), start + mp( 0,  1)}, '|'},
+        {{start + mp(-1,  0), start + mp( 1,  0)}, '-'},
+        {{start + mp(-1,  0), start + mp( 0,  1)}, 'L'},
+        {{start + mp( 0,  1), start + mp( 1,  0)}, 'F'},
+        {{start + mp( 1,  0), start + mp( 0, -1)}, '7'},
+        {{start + mp( 0, -1), start + mp(-1,  0)}, 'J'}
+    };
+    ss[start.fi][start.se] = replace[adj];
 
     int res = 0;
     F0R(r, SZ(ss)) {
       bool in = false;
-      for(int c = 0; c < SZ(ss[r]); ++c) {
+      F0R(c, SZ(ss[r])) {
           if(loop.count({r, c})) {
               if(ss[r][c] == '|') in ^= 1;
               else if(ss[r][c] == 'F' || ss[r][c] == 'L') {
                   char ch = ss[r][c];
                   while(ss[r][++c] == '-');
-                  in ^= (ch == 'F' && ss[r][c] == 'J') || (ch == 'L' && ss[r][c] == '7');
+                  in ^= (ch == 'F' && ss[r][c] == 'J') ||
+                        (ch == 'L' && ss[r][c] == '7');
               }          
           } else {
               res += in;
