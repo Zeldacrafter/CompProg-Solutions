@@ -24,19 +24,19 @@ void solve() {
             return;
         }
 
-        F0R (i, 4) {
-            if ((dirs[i] & dir) != mp(0, 0)) continue;
+        for(ii newDitr : dirs) {
+            if ((newDir & dir) != mp(0, 0)) continue;
             ll dNew = d;
             FOR (j, 1, 11) {
-                ii pp = p + j*dirs[i];
+                ii pp = p + j*newDir;
                 auto [rr, cc] = pp;
 
                 if (min(cc, rr) < 0 || rr >= SZ(ss) || cc >= SZ(ss[rr])) break;
 
                 dNew += ss[rr][cc] - '0';
-                if (j >= 4 && (!dist.count({pp, dirs[i]}) || dist[{pp, dirs[i]}] > dNew)) {
-                    dist[{pp, dirs[i]}] = dNew;
-                    q.emplace(dNew, pp, dirs[i]);
+                if (j >= 4 && (!dist.count({pp, newDir}) || dist[{pp, newDir}] > dNew)) {
+                    dist[{pp, newDir}] = dNew;
+                    q.emplace(dNew, pp, newDir);
                 }
             }
         }
