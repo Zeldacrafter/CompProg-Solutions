@@ -16,26 +16,22 @@ void solve() {
     seen.emplace(start.fi, start.se, 0);
 
     while(SZ(q)) {
-        auto [r, c, t] = q.front();
+        auto [r, c, d] = q.front();
         q.pop();
 
-        if(t == N + 1) break;
+        if(d == N + 1) break;
 
         F0R(i, 4) {
-            int rr = r + dr[i];
-            int cc = c + dc[i];
-            if(min(rr, cc) < 0 || rr >= SZ(ss) || cc >= SZ(ss[0])) continue;
+            int rr = r + dr[i], cc = c + dc[i];
 
-            if(ss[rr][cc] == '#') continue;
+            if(min(rr, cc) < 0 || rr >= SZ(ss) || cc >= SZ(ss[0]) || ss[rr][cc] == '#')
+                continue;
 
-            if(seen.emplace(rr, cc, t + 1).se)
-                q.emplace(rr, cc, t + 1);
+            if(seen.emplace(rr, cc, d + 1).se)
+                q.emplace(rr, cc, d + 1);
         }
     }
 
-    ll res = 0;
-    for(auto [r, c, t] : seen)
-        res += t == N;
-    cout << res << endl;
+    cout << count_if(ALL(seen), [](auto t) { return get<2>(t) == N; }) << endl;
 }
 
