@@ -27,8 +27,11 @@ decltype(auto) y_combinator(F&& f) {
 // Reading input line by line
 ///////////////////////////////////////////////////////////////
 
+/* matchMultiple = false: Match a regex expression once and capture all groups
+ * matchMultiple = true: Match a regex expression as often as possible and capture all groups.
+ */ 
 template<typename F>
-vector<string> getInp(F f, string regexPattern) {
+vector<string> getInp(F f, string regexPattern, bool matchMultiple = false) {
     
     vector<string> res;
     string s;
@@ -41,17 +44,32 @@ vector<string> getInp(F f, string regexPattern) {
           regex re(regexPattern);
 
           smatch match;
-          if(regex_search(s, match, re)) {
-            string resS = "";
-            for (auto submatch : match) {
-              if (string(submatch) != s) {
-                if(resS != "") resS += " ";
-                resS += submatch;
+          if(!matchMultiple) {
+              if(regex_search(s, match, re)) {
+                string resS = "";
+                for (auto submatch : match) {
+                  if (string(submatch) != s) {
+                    if(resS != "") resS += " ";
+                    resS += submatch;
+                  }
+                }
+                s = resS;
+              } else {
+                dout << "Input line \"" << s << "\" does not match regex string!" << endl;
               }
-            }
-            s = resS;
           } else {
-            dout << "Input line \"" << s << "\" does not match regex string!" << endl;
+              string resS = "";
+              string::const_iterator searchStart(s.cbegin());
+              while (regex_search(searchStart, s.cend(), match, re)) {
+                for (auto submatch : match) {
+                  if (string(submatch) != s) {
+                    if(resS != "") resS += " ";
+                    resS += submatch;
+                  }
+                }
+                searchStart = match.suffix().first;
+              }
+              s = resS;
           }
         }
         stringstream inp(s);
