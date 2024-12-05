@@ -1,29 +1,13 @@
 #include "../utils.cc"
 
-map<int, vi> adj;
-set<int> reaches(int v, vi& update) {
-    set<int> res = {v};
-    queue<int> q;
-    q.push(v);
-
-    while(SZ(q)) {
-        int curr = q.front(); q.pop();
-        for(int u : adj[curr]) {
-            if(res.count(u) || !count(ALL(update), u)) continue;
-            q.push(u);
-            res.insert(u);
-        }
-    }
-    return res;
-}
-
 void solve() {
+    map<int, set<int>> adj;
     vvi updates;
     getInp([&](auto& cin, int) {
         ll k; char c; cin >> k >> c;
         if(c == '|') {
             ll k2; cin >> k2;
-            adj[k].pb(k2);
+            adj[k2].insert(k);
         } else {
             updates.eb();
             updates.back().pb(k);
@@ -37,11 +21,8 @@ void solve() {
     ll res = 0;
     for(vi& update : updates) {
         bool ok = true;
-        F0R(i, SZ(update)) {
-            set<int> reach = reaches(update[i], update);
-            F0R(j, i) ok &= !reach.count(update[j]);
-            if(!ok) break;
-        }
+        F0R(i, SZ(update)) F0R(j, i)
+            ok &= !adj[update[j]].contains(update[i]);
         if(!ok) continue;
 
         res += update[SZ(update)/2];
