@@ -26,10 +26,9 @@ set<ii> coords(int r, int c) {
 }
 
 void solve() {
-    ll res = 0;
-
     ss = getInp();
 
+    ll res = 0;
     set<ii> seen;
     F0R(r, SZ(ss)) F0R(c, SZ(ss[0])) {
         if(seen.contains({r, c})) continue;
