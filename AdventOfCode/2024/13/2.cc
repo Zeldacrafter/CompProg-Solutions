@@ -29,6 +29,8 @@ for i in range(len(a)):
 
     opt = Optimize()
 
+    opt.add(A >= 0)
+    opt.add(B >= 0)
     opt.add(a[i][0]*A + b[i][0]*B == want[i][0])
     opt.add(a[i][1]*A + b[i][1]*B == want[i][1])
     opt.add(cost == 3*A + B)
