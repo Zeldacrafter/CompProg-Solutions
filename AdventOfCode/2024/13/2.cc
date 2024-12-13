@@ -1,41 +1,23 @@
-#// Today is python! :(
-from z3 import *
-import fileinput
+#include "../utils.cc"
 
-a, b, want = [], [], []
-i = 0
-for line in fileinput.input():
-    if i % 4 == 0:
-        words = line.split(" ");
-        x, y = int(words[2][2:-1]), int(words[3][2:-1])
-        a += [(x, y)]
-    if i % 4 == 1:
-        words = line.split(" ");
-        x, y = int(words[2][2:-1]), int(words[3][2:-1])
-        b += [(x, y)]
-    if i % 4 == 2:
-        words = line.split(" ");
-        x, y = int(words[1][2:-1]), int(words[2][2:-1])
-        x += 10000000000000
-        y += 10000000000000
-        want += [(x, y)]
-    i += 1
+void solve() {
+    vector<pair<ll, ll>> as, bs, cs;
+    getInp([&](auto& cin, int i) {
+        ll x, y;
+        cin >> x >> y;
+        if(i % 4 == 0)        as.eb(x, y);
+        else if(i % 4 == 1) bs.eb(x, y);
+        else if(i % 4 == 2) cs.eb(x + 10000000000000ll, y + 10000000000000ll);
+    }, ".*X.([0-9]*), Y.([0-9]*)");
 
-res = 0
-for i in range(len(a)):
-    A = Int('A')
-    B = Int('B')
-    cost = Int('cost')
+    ll res = 0;
+    F0R(i, SZ(as)) {
+        ll inv = as[i].fi*bs[i].se - as[i].se*bs[i].fi;
+        if(!inv) continue;
 
-    opt = Optimize()
-
-    opt.add(A >= 0)
-    opt.add(B >= 0)
-    opt.add(a[i][0]*A + b[i][0]*B == want[i][0])
-    opt.add(a[i][1]*A + b[i][1]*B == want[i][1])
-    opt.add(cost == 3*A + B)
-
-    opt.minimize(cost)
-    if opt.check() == sat:
-        res += opt.model()[cost].as_long()
-print(res)
+        double a = 1.0*(cs[i].fi*bs[i].se - cs[i].se*bs[i].fi)/inv;
+        double b = 1.0*(cs[i].se*as[i].fi - cs[i].fi*as[i].se)/inv;
+        if(abs(a - (ll)(a + 0.5)) < 1e-9 && abs(b - (ll)(b + 0.5)) < 1e-9) res += 3*a + b;
+    }
+    cout << res << endl;
+}
