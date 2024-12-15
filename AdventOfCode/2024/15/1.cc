@@ -1,16 +1,16 @@
 #include "../utils.cc"
+map<char, ii> dirs{{'<', {0, -1}}, {'^', {-1, 0}}, {'>', {0, 1}}, {'v', {1, 0}}};
 vector<string> grid;
 
-char get(ii pos) { return grid[pos.fi][pos.se]; }
-void modify(ii pos, char c) { grid[pos.fi][pos.se] = c; }
+char& get(ii pos) { return grid[pos.fi][pos.se]; }
 
 bool move(ii pos, ii dir) {
     if(get(pos + dir) == '#') return false;
 
     bool ok = get(pos + dir) == '.' || move(pos + dir, dir);
     if(ok) { 
-        modify(pos + dir, get(pos));
-        modify(pos, '.');
+        get(pos + dir) = get(pos);
+        get(pos) = '.';
     }
     return ok;
 }
@@ -28,12 +28,6 @@ void solve() {
             else seq += s;
         }
     }
-
-    map<char, ii> dirs;
-    dirs['^'] = mp(-1, 0);
-    dirs['v'] = mp(1, 0);
-    dirs['>'] = mp(0, 1);
-    dirs['<'] = mp(0, -1);
 
     ii pos;
     F0R(i, SZ(grid)) F0R(j, SZ(grid[i]))

@@ -1,9 +1,8 @@
 #include "../utils.cc"
-// character, (if O:) if it the left
+map<char, ii> dirs{{'<', {0, -1}}, {'^', {-1, 0}}, {'>', {0, 1}}, {'v', {1, 0}}};
 vector<string> grid;
 
-char get(ii pos) { return grid[pos.fi][pos.se]; }
-void modify(ii pos, char c) { grid[pos.fi][pos.se] = c; }
+char& get(ii pos) { return grid[pos.fi][pos.se]; }
 
 bool canMove(ii pos, ii dir) {
     if(get(pos + dir)== '#') return false;
@@ -22,14 +21,14 @@ void doMove(ii pos, ii dir) {
     if(get(pos + dir) == '#') return;
 
     if(get(pos + dir) != '.') doMove(pos + dir, dir); 
-    modify(pos + dir, get(pos));
-    modify(pos, '.');
+    get(pos + dir) = get(pos);
+    get(pos) = '.';
     
     if(!dir.se && (get(pos + dir) == ']' || get(pos + dir) == '[')) {
         ii delta = mp(0, get(pos + dir) == '[' ? 1 : -1);
         doMove(pos + dir + delta, dir);
-        modify(pos + dir + delta, get(pos + delta));
-        modify(pos + delta, '.');
+        get(pos + dir + delta) = get(pos + delta);
+        get(pos + delta) = '.';
     }
 }
 
@@ -62,12 +61,6 @@ void solve() {
         }
     }
 
-    map<char, ii> dirs;
-    dirs['^'] = mp(-1, 0);
-    dirs['v'] = mp(1, 0);
-    dirs['>'] = mp(0, 1);
-    dirs['<'] = mp(0, -1);
-
     ii pos;
     F0R(i, SZ(grid)) F0R(j, SZ(grid[i]))
         if(grid[i][j] == '@') pos = mp(i, j);
@@ -83,5 +76,4 @@ void solve() {
     F0R(r, SZ(grid)) F0R(c, SZ(grid[0]))
         if(grid[r][c] == '[') res += r*100 + c;
     cout << res << endl;
-
 }
