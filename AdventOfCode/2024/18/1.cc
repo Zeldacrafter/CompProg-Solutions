@@ -3,26 +3,14 @@
 int SIZE = 71;
 vii dirs = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
 
-void solve() {
-    set<ii> bad;
-    getInp([&](auto& cin, int i) {
-        if(i >= 1024) return;
-
-        char _; int x, y;
-        cin >> x >> _ >> y;
-        bad.emplace(x, y);
-    });
-
+int get_dist(set<ii>& bad) {
     queue<ii> q;
     map<ii, int> dist;
     q.emplace(0, 0);
     while(SZ(q)) {
         ii pos = q.front(); q.pop();
 
-        if(pos == mp(SIZE - 1, SIZE - 1)) {
-            cout << dist[pos] << endl;
-            break;
-        }
+        if(pos == mp(SIZE - 1, SIZE - 1)) return dist[pos];
 
         F0R(i, 4) {
             if(min((pos + dirs[i]).fi, (pos + dirs[i]).se) < 0 || 
@@ -32,5 +20,19 @@ void solve() {
             dist[pos + dirs[i]] = dist[pos] + 1;
         }
     }
+    assert(false);
+    return -1;
+}
+
+void solve() {
+    set<ii> bad;
+    getInp([&](auto& cin, int i) {
+        if(i >= 1024) return;
+
+        char _; int x, y;
+        cin >> x >> _ >> y;
+        bad.emplace(x, y);
+    });
+    cout << pp(get_dist(bad)) << endl;
 }
 
