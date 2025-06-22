@@ -334,7 +334,6 @@ void solve() {
     ll n, m;
     cin >> n >> m;
 
-    // find first x with x*(x-1)/2  +  (n-(x-1))*x
     auto calcMax = [&](ll x) { return x*(x-1)/2 + (n - (x-1))*x; };
 
     if(m < calcMax(1) || m > calcMax(n)) {
@@ -355,17 +354,15 @@ void solve() {
     }
 
     cout << startVal << endl;
-    ll valLeft = m - startVal;
-    FOR(i, 1, startVal) {
-        cout << startVal << ' ' << i << endl;
-        valLeft -= i;
-    }
-    if(!valLeft) return;
+    FOR(i, 1, startVal) cout << startVal << ' ' << i << endl;
 
+    ll valLeft = m - startVal*(startVal + 1)/2;
     ll vertsLeft = n - startVal;
+
+    if(!vertsLeft) return;
+
     map<ll, ll> amts;
     for(int i = startVal; valLeft; i = valLeft) {
-        //assert(i > 0);
         amts[i] = valLeft / i;
         vertsLeft -= valLeft / i;
         valLeft %= i;
@@ -375,7 +372,6 @@ void solve() {
 
     if(vertsLeft) {
         amt -= vertsLeft/(v - 1);
-        //assert(amt > 0);
         amts[1] += vertsLeft/(v - 1)*v;
         vertsLeft %= v - 1;
     }
@@ -389,9 +385,8 @@ void solve() {
     amts[v] = amt;
 
     ll currVert = n;
-    for(auto [vv, aa] : amts) {
-        F0R(_, aa) cout << vv << ' ' <<  currVert-- << endl;
-    }
+    for(auto [vv, aa] : amts) F0R(_, aa) 
+        cout << vv << ' ' <<  currVert-- << endl;
 }
 
 int main() {

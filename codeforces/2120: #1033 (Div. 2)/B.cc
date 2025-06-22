@@ -335,22 +335,15 @@ struct yes_no : std::numpunct<char> {
 };
 
 void solve() {
-   vii a(3);
-   cin >> a;
+    int n, s; cin >> n >> s;
 
-   bool ok = (a[0].fi == a[1].fi && a[1].fi == a[2].fi && a[0].se + a[1].se + a[2].se == a[0].fi)
-          || (a[0].se == a[1].se && a[1].se == a[2].se && a[0].fi + a[1].fi + a[2].fi == a[0].se);
-
-   sort(ALL(a));
-   while(next_permutation(ALL(a))) {
-       ok |= a[0].fi == a[1].fi + a[2].fi 
-           && a[1].se == a[2].se
-           && a[0].fi == a[0].se + a[1].se;
-       ok |= a[0].se == a[1].se + a[2].se 
-           && a[1].fi == a[2].fi
-           && a[0].se == a[0].fi + a[1].fi;
-   }
-   cout << ok << endl;
+    ll res = 0;
+    F0R(i, n) {
+        ll x, y, dx, dy;
+        cin >> x >> y >> dx >> dy;
+        res += (dx*x - dy*y) % s == 0;
+    }
+    cout << res << endl;
 }
 
 int main() {
